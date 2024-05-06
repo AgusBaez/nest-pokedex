@@ -2,25 +2,31 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-# Ejecutar en desarrollo
+# Ejecute in Development mode
 
 1. clonar repositorio
-2. Ejecutar
+
+2. Use comand for donwload package
 ```
 npm i
 ```
-3. Tener Nest CLI instalado
+
+3. Install nest CLI
 ```
 npm i -g @nestjs/cli
 ```
 
-
-4. Levantar Base de Datos
+4. Up database
+```
+docker-compose up -d
 ```
 
+5. Rebuild database whit seed
+```
+http://localhost:3000/api/v2/seed
 ```
 
-## Stack Usado
+## Stack used in this proyect
  * MongoDB - Moongose - MongoAtlas.
  * Nest.
  * Typescript.
