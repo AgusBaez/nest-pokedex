@@ -10,8 +10,12 @@ async function bootstrap() {
     new ValidationPipe({
       // * valida los endpoints
       whitelist: true, // * remueve la data basura en los body rescibidos
-      forbidNonWhitelisted: true, // * verifica que el objeto tiene que ser la misma data que se espera
-    }), // *, Aca declararias despues de la coma, mas news pipes
+      forbidNonWhitelisted: true, // * verifica que el objeto tiene que ser la misma data que se espera en nuestro DTO
+      transform: true, //* Tranformar la data que llega por Query segun lo especificado en los DTO
+      transformOptions: {
+        enableImplicitConversion: true, //* Esto permite convertir la data enviada o recibida segun lo que declaremos en TS
+      },
+    }), // *, Aca declararias despues de la coma mas news pipes
   );
 
   //* Global Prefix Rute

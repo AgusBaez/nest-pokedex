@@ -4,12 +4,12 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, isValidObjectId } from 'mongoose'; //* funcionalidades con mongoDB
+import { Pokemon } from './entities/pokemon.entity';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
-import { PokemonModule } from './pokemon.module';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, isValidObjectId } from 'mongoose';
-import { Pokemon } from './entities/pokemon.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class PokemonService {
@@ -30,9 +30,12 @@ export class PokemonService {
     }
   }
 
-  async findAll() {
-    const pokemon = await this.PokemonModule.find();
-    return pokemon;
+  async findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto; //* Ahorra tiempo de compilacion llamando las propiedades y usandolas, en vez de hacer un llamado a la clase cadavez que necesite usar una propiedad
+    return await this.PokemonModule.find()
+      .limit(limit)
+      .skip(offset)
+      .sort({ no: 1 });
   }
 
   async findOne(term: string) {
