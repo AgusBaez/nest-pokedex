@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { ConfigService } from '@nestjs/config';
 import { Model, isValidObjectId } from 'mongoose'; //* funcionalidades con mongoDB
 import { Pokemon } from './entities/pokemon.entity';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
@@ -13,11 +14,15 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class PokemonService {
+  private defaultLimit: number;
   constructor(
     //* inyeccion de dependencias va aca
     @InjectModel(Pokemon.name)
     private readonly PokemonModule: Model<Pokemon>,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.defaultLimit = configService.get<number>('defaultLimit');
+  }
 
   async create(createPokemonDto: CreatePokemonDto) {
     createPokemonDto.name = createPokemonDto.name.toLocaleLowerCase();
@@ -31,7 +36,7 @@ export class PokemonService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { limit = 10, offset = 0 } = paginationDto; //* Ahorra tiempo de compilacion llamando las propiedades y usandolas, en vez de hacer un llamado a la clase cadavez que necesite usar una propiedad
+    const { limit = this.defaultLimit, offset = 0 } = paginationDto; //* Ahorra tiempo de compilacion llamando las propiedades y usandolas, en vez de hacer un llamado a la clase cadavez que necesite usar una propiedad
     return await this.PokemonModule.find()
       .limit(limit)
       .skip(offset)
